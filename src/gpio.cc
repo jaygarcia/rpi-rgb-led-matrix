@@ -466,7 +466,7 @@ public:
     if (LinuxHasModuleLoaded("snd_bcm2835")) {
       fprintf(stderr,
               "\n%s=== snd_bcm2835: found that the Pi sound module is loaded. ===%s\n"
-              "Don't use the built-in sound of the Pi together with this lib; it is known to be\n"
+              "Don't use the built-in sound of the Pi together with this src; it is known to be\n"
 	      "incompatible and cause trouble and hangs (you can still use external USB sound adapters).\n\n"
               "See Troubleshooting section in README how to disable the sound module.\n"
 	      "You can also run with --led-no-hardware-pulse to avoid the incompatibility,\n"

@@ -185,46 +185,9 @@ void led_canvas_fill(struct LedCanvas *canvas, uint8_t r, uint8_t g, uint8_t b) 
   to_canvas(canvas)->Fill(r, g, b);
 }
 
-struct LedFont *load_font(const char *bdf_font_file) {
-	rgb_matrix::Font* font = new rgb_matrix::Font();
-	font->LoadFont(bdf_font_file);
-	return from_font(font);
-}
-
-void delete_font(struct LedFont *font) {
-	delete to_font(font);
-}
-
-
 // -- Some utility functions.
 
-// Draw text, a standard NUL terminated C-string encoded in UTF-8,
-// with given "font" at "x","y" with "color".
-// "color" always needs to be set (hence it is a reference),
-// "background_color" is a pointer to optionally be NULL for transparency.
-// "kerning_offset" allows for additional spacing between characters (can be
-// negative)
-// Returns how many pixels we advanced on the screen.
-int draw_text(struct LedCanvas *c, struct LedFont *font, int x, int y,
-	uint8_t r, uint8_t g, uint8_t b, const char *utf8_text, int kerning_offset) {
-	const rgb_matrix::Color col = rgb_matrix::Color(r, g, b);
-	return DrawText(to_canvas(c), *to_font(font), x, y, col, NULL, utf8_text, kerning_offset);
-}
 
-// Draw text, a standard NUL terminated C-string encoded in UTF-8,
-// with given "font" at "x","y" with "color".
-// Draw text as above, but vertically (top down).
-// The text is a standard NUL terminated C-string encoded in UTF-8.
-// "font, "x", "y", "color" and "background_color" are same as DrawText().
-// "kerning_offset" allows for additional spacing between characters (can be
-// negative).
-// Returns font height to advance up on the screen.
-int vertical_draw_text(struct LedCanvas *c, struct LedFont *font, int x, int y,
-	uint8_t r, uint8_t g, uint8_t b,
-	const char *utf8_text, int kerning_offset = 0) {
-	const rgb_matrix::Color col = rgb_matrix::Color(r, g, b);
-	return VerticalDrawText(to_canvas(c), *to_font(font), x, y, col, NULL, utf8_text, kerning_offset);
-}
 
 // Draw a circle centered at "x", "y", with a radius of "radius" and with "color"
 void draw_circle(struct LedCanvas *c, int xx, int y, int radius, uint8_t r, uint8_t g, uint8_t b) {
