@@ -131,7 +131,7 @@ The library comes as an API that you can use for your own utilities and use-case
     Example uses you find in the [examples-api-use/](./examples-api-use)
     directory.
   * If you prefer to program in C, there is also a
-    [C API](./include/led-matrix-c.h).
+    [C API](lib/led-matrix-c.h).
   * In the [python](./bindings/python) subdirectory, you find a Python API including a
     couple of [examples](./bindings/python/samples) to get started.
   * There are a couple of external bindings, such as
