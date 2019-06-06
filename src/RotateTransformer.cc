@@ -27,7 +27,7 @@
 #include <assert.h>
 #include <stdio.h>
 
-#include "transformer.h"
+#include "RotateTransformer.h"
 
 namespace rgb_matrix {
 

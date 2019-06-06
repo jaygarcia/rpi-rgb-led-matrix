@@ -27,7 +27,7 @@
 #include "GPIO.h"
 #include "canvas.h"
 #include "thread.h"
-#include "pixel-mapper.h"
+#include "PixelMapper.h"
 
 namespace rgb_matrix {
 class RGBMatrix;
