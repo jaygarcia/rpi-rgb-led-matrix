@@ -17,8 +17,8 @@
 #ifndef RPI_THREADED_CANVAS_MANIPULATOR_H
 #define RPI_THREADED_CANVAS_MANIPULATOR_H
 
-#include "thread.h"
-#include "canvas.h"
+#include "Thread.h"
+#include "Canvas.h"
 
 namespace rgb_matrix {
 //

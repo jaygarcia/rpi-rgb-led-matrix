@@ -26,7 +26,7 @@
 #include <sys/time.h>
 
 #include "GPIO.h"
-#include "thread.h"
+#include "Thread.h"
 #include "framebuffer-internal.h"
 #include "multiplex-mappers-internal.h"
 
