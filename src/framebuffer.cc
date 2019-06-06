@@ -29,7 +29,7 @@
 
 #include <algorithm>
 
-#include "gpio.h"
+#include "GPIO.h"
 
 namespace rgb_matrix {
 namespace internal {

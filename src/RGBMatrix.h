@@ -24,7 +24,7 @@
 #include <string>
 #include <vector>
 
-#include "gpio.h"
+#include "GPIO.h"
 #include "canvas.h"
 #include "thread.h"
 #include "pixel-mapper.h"
