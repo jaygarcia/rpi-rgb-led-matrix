@@ -94,7 +94,7 @@ Let's do it
 This documentation is split into parts that help you through the process
 
   1. <a href="wiring.md"><img src="img/wire-up-icon.png"></a>
-    [**Wire up the matrix to your Pi**](./wiring.md). This document describes
+    [**Wire up the matrix to your Pi**](wiring.md). This document describes
     what goes where. You might also be interested
     in [breakout boards](./adapter) for that.
     If you have an [Adafruit HAT] or [Adafruit Bonnet], you can choose that with
@@ -132,8 +132,8 @@ The library comes as an API that you can use for your own utilities and use-case
     directory.
   * If you prefer to program in C, there is also a
     [C API](src/led-matrix-c.h).
-  * In the [python](backlog/bindings/python) subdirectory, you find a Python API including a
-    couple of [examples](backlog/bindings/python/samples) to get started.
+  * In the [python](bindings/python) subdirectory, you find a Python API including a
+    couple of [examples](bindings/python/samples) to get started.
   * There are a couple of external bindings, such as
       * [Nodejs binding] by Maxime Journaux.
       * [Go binding] by Máximo Cuadros
@@ -150,7 +150,7 @@ Here is a little run-down of what these command-line flags do and when you'd
 like to change them.
 
 First things first: if you have a different wiring than described in
-[wiring](./wiring.md), for instance if you have an Adafruit HAT/Bonnet, you can
+[wiring](wiring.md), for instance if you have an Adafruit HAT/Bonnet, you can
 choose these here:
 
 ```
@@ -158,7 +158,7 @@ choose these here:
 ```
 
 This can have values such as
-  - `--led-gpio-mapping=regular` The standard mapping of this library, described in the [wiring](./wiring.md) page.
+  - `--led-gpio-mapping=regular` The standard mapping of this library, described in the [wiring](wiring.md) page.
   - `--led-gpio-mapping=adafruit-hat` The Adafruit HAT/Bonnet, that uses this library or
   - `--led-gpio-mapping=adafruit-hat-pwm` Adafruit HAT with the anti-flicker hardware mod [described below](#improving-flicker).
 
@@ -459,7 +459,7 @@ Reboot and confirm that the module is not loaded.
 
 Well, if you use this library, please read the documentation provided _here_,
 not on some other website. Most important for you to get started
-is the [wiring guide](./wiring.md).
+is the [wiring guide](wiring.md).
 
 Adafruit has some outdated tutorial based on a super-ancient version of this
 library. It won't work.
