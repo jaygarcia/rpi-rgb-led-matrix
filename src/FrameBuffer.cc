@@ -1,4 +1,3 @@
-us
 // -*- mode: c++; c-basic-offset: 2; indent-tabs-mode: nil; -*-
 // Copyright (C) 2013 Henner Zeller <h.zeller@acm.org>
 //
@@ -18,7 +17,7 @@ us
 // format that is friendly to be dumped to the matrix quickly. Provides methods
 // to manipulate the content.
 
-#include "framebuffer-internal.h"
+#include "FrameBuffer-internal.h"
 
 #include <assert.h>
 #include <ctype.h>

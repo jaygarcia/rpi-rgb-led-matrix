@@ -27,7 +27,7 @@
 
 #include "GPIO.h"
 #include "Thread.h"
-#include "framebuffer-internal.h"
+#include "FrameBuffer-internal.h"
 #include "multiplex-mappers-internal.h"
 
 // Leave this in here for a while. Setting things from old defines.
