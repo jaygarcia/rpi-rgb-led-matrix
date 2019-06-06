@@ -20,7 +20,7 @@
 #include <stdio.h>
 
 #include "led-matrix.h"
-#include "graphics.h"
+#include "../backlog/graphics.h"
 
 
 // Our opaque dummy structs to communicate with the c-world

@@ -17,7 +17,7 @@
 /*
  * We do this in plain C so that we can use designated initializers.
  */
-#include "hardware-mapping.h"
+#include "HardwareMapping.h"
 
 #define GPIO_BIT(b) (1<<(b))
 

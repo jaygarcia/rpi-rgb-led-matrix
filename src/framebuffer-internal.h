@@ -18,7 +18,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#include "hardware-mapping.h"
+#include "HardwareMapping.h"
 
 namespace rgb_matrix {
 class GPIO;
