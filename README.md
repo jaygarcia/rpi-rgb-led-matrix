@@ -132,8 +132,8 @@ The library comes as an API that you can use for your own utilities and use-case
     directory.
   * If you prefer to program in C, there is also a
     [C API](src/led-matrix-c.h).
-  * In the [python](./bindings/python) subdirectory, you find a Python API including a
-    couple of [examples](./bindings/python/samples) to get started.
+  * In the [python](backlog/bindings/python) subdirectory, you find a Python API including a
+    couple of [examples](backlog/bindings/python/samples) to get started.
   * There are a couple of external bindings, such as
       * [Nodejs binding] by Maxime Journaux.
       * [Go binding] by Máximo Cuadros
