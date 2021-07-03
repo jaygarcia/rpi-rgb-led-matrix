@@ -1,0 +1,63 @@
+This library works in the larger area of signage. There are three major applications here:
+  1. Billboard
+  2. Message Board
+  3. Video Wall
+  
+  The difference between these applications is arbitrary to some degree. However the major difference is in size and frame rate.
+  Billboard are generally static and huge. Quality is undefined.
+  Video walls are generally high frame rate. Size is undefined and quality is somewhat implied.
+  Message boards could be small billboards, smaller video walls or lower frame rate annimations.
+  
+  This library supports message boards only. It does so with bit banging via single GPIO bank.
+  Bit banging is used for cost and limitations in Pi hardware. This consumes a lot of CPU power.
+    Standard LED drivers use less CPU power and memory potentially compared to PWM and memory mapped LED drivers.
+  
+  This library targets standard LED drivers by design. 
+  The issue with standard LED drivers is that they do not support large high quality images or high quality videos.
+  Instead they allow for creating different combinations of size, quality and performance.
+  A certain level of performance is required for operation, which restricts them some what.
+  
+  A different library could exist for PWM LED drivers. These force a quality improvement which can restrict their size and performance.
+  Like standard LED drivers a certain level of performance is required for operation.
+  Generally size and performance are determined by independent clocks.
+  Only use this if needing the quality, as you cannot reduce it to get more size.
+    You can potentially throw away some of the quality.
+  
+  A different library could exist for memory mapped LED drivers. There are many types of memory mapped LED drivers.
+  The issue with memory mapped LED drivers they can enable very high resolution at very large quality.
+  This could consume a lot of memory and/or CPU processing power.
+  The other issue with memory mapped LED drivers is they can enable very low frame rates with high refresh.
+  This could cause an increase in memory and/or CPU processing power.
+  Depending on frame rate CPU make be given additional time.
+  Memory optimization is possible if you only compute and update sections of display at time.
+    Memory maps support dual buffer which enables partial update individual chains followed by global switch command.
+    Arduino could in theory drive 32,000,000 pixels.
+  Memory mapped drivers using S-PWM generally solve the performance requirement.
+    However quality competes with frame rate as they are combine to create refresh rate.
+    
+    
+  The are many many ways to build LED matrixes. Many ways to interface, multiplex, control, etc.
+    FPGAs and advanced techniques enable many improvements. However can be complicated, specific and costly.
+    Technically generalization is possible. However memory cost, configuration flexibility and computation power are problematic.
+    This is the failure of a larger market/industry.
+      Power consumption is also problematic and almost always misunderstood.
+  It could create confusion or misuse to support all combinations in a single API.
+    However is possible in theory. Except some approaches, like this one, require special care.
+    
+    
+  Note there are many ways to retro fit a memory map onto a LED matrix.
+  In fact this is what this library does.
+  Memory maps are generally used in several types of IO/memory transfers.
+  This can make programming simpler, however bit banging generally does the opposite.
+    Therefore multicore is recommended as it breaks this up.
+    Additional complications can still rise on unified and general purpose computer architectures from this.
+  
+  
+  In summary:
+    For standard LED drivers you can make:
+      Video wall, message board and billboard where size and quality compete.
+    For PWM LED drivers you can make:
+      Higher quality video wall, message board and billboard displays.
+    For memory mapped LED drivers you can make:
+      Larger video walls, as long as CPU and memory are capable.
+      Potentially unlimited size billboard, as long as CPU is fast enough and/or enough memory exists.

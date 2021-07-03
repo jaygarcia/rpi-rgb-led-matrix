@@ -1,0 +1,321 @@
+Troubleshooting:
+Do the following test cases in order. This is a simplified version where you just try stuff. The point of this is to prevent the following.
+
+	Explaining all of this would be very lengthy. There is a semi-mathematical/theoretical version for all this, however this harder without fully knowing certain variables. This would be considered advanced even for people with decent knowledge. There is a range of issues: electrical, programming, hardware/software architecture, operating systems, networking, entropy, etc. There are short cuts, and knowing more will help. However it does have limits.
+
+You can try the discussion board and issue tracker at your own risk. Experience here is very broad. More niche cases may not find support. More general cases will fair better. There is a decent amount of information from years of questions to search through.
+
+
+When asking for help on the discussion board and issue tracker, list as much information as possible.
+	1. List Pi model and OS information
+	2. List panel IC names/numbers and include PCB text.
+	3. List power supply model, voltage, current, etc.
+	4. List full command line command with all args.
+	5. Give description of what has been tried.
+	6. Give description of goal/intention.
+	7. Give description of problem. (Videos are helpful.)
+	8. List programming experience level and languages.
+	9. List pin adapter along with setup/modifications.
+	10. Please search other issues and reference differences to past issues.
+
+
+Test Cases:
+1. Test CPU - Point of this is to prove CPU can draw frames without issues.
+	a. Do not use panels.
+	b. Ensure rest of system is idle.
+	c. Test drawing frames at desire frame draw rate.
+		i. For worse case, draw all pixels in frame with white.
+2. Test System - Point of this is to prove system is stable enough to draw and display frames without issues.
+	a. Do not use panels.
+		i. Use FPS reporting function.
+	b. Depends on settings.
+		i. Refresh rate and pwm bits
+			1. Lower PWM bits equals higher refresh.
+			2. Higher refresh can increase visual stability.
+			3. Lower PWM bits may increase brightness.
+			4. Lower PWM bits will reduce color depth.
+			5. Higher refresh rate may stress power supply.
+			6. Do not exceed panel refresh rate.
+		ii. Size
+			1. Parallel connects are recommend when pins are available.
+			2. Shorter chains may be more stable.
+			3. Longer chains may reduce refresh rate.
+			4. Longer chains may reduce brightness.
+				a. May be corrected with larger values of lsb-nanoseconds.
+		iii. lsb-nanoseconds
+			1. Lower values may increase refresh rate.
+				a. Higher values may decrease refresh rate.
+			2. Lower values may allow for higher pwm bits.
+			3. Lower values may fail to meet timing for all pwm bits.
+			4. Lower values may reduce brightness.
+				a. May be corrected with less pwm bits and/or larger values of lsb-nanoseconds.
+		iv. Increase GPIO-slowdown to reduce serial clock.
+			1. Target 0-15MHz
+				a. Larger and/or higher quality display will need more.
+				b. Longer cables and passive adapters may want to use less.
+				c. When in doubt test with lower speed by increasing GPIO-slowdown.
+				d. See GPIO-slowdown recommendations below.
+			2. Some panels and cabling may be cable of more or less serial clock speed.
+				a. Generally not documented.
+				b. LED drivers will set upper limit. (See datasheet if available.)
+					i. Note probably available in table regardless of language.
+		v. Scale lsb-nanoseconds to OE hold time divided by 2 ^ (11 - pwm_bits)
+	c. Depends on expected system usage.
+		i. CPU and Memory usage.
+			a. Load system in worse case.
+			b. Reduce size and/or quality to get higher refresh.
+				i. May have adverse effects to system if relies on cache stability.
+				ii. May want to test RAM bus contention for access.
+		ii. Networking, filesystem, kernel functions, etc.
+			a. Attempt steps in 2.c.i
+			b. Not likely possible to prevent.
+				i. Try isolcpu
+				ii. Try hardware PWM
+				iii. DietPi
+				iv. Real time linux kernel
+		iii. GPIO usage.
+			a. Attempt steps in 2.c.i
+			b. Increase GPIO-slowdown
+			c. Increase lsb-nanoseconds
+		iv. Thermal throttling.
+			a. Warm CPU
+			b. Attempt steps 2.c.i
+			c. May collapse frame draw rate
+	d. There are lot of different applications, which may favor different things.
+		i. You could easily write a mini-book here.
+		ii. There is some level of deception here.
+			a. This library is a message board.
+				i. It can video on small setups.
+					1. Pi struggles here due to bit banging.
+				ii. It can support larger displays with simple colors.
+					1. This may not work very well for large number of active pixels.
+					2. Memory consumption can be high here.
+					3. May not play nice with other system functions.
+	e. The Pi is not overly well optimized for this.
+		i. Multicore is recommended.
+		ii. See 2.c.ii.b
+		iii. Will work for certain use cases.
+			a. Large basic message boards.
+			b. Small decent quality message boards.
+				i. Some video is possible.
+		iv. Will not work well for all use cases.
+			a. High quality with high refresh rate.
+				i. Serial clock limited.
+			b. Large high quality displays with high frame rate.
+				i. CPU performance limited.
+			c. See 4.e.ii
+		v. DMA is unavailable due to nature of Pi as microprocessor.
+			a. Not overly optimized for this kind of IO.
+				i. In theory it could support it.
+					1. Some limitations would exist, however most do not apply here.
+			b. DMA is supported on lower bandwdith IO.
+			c. See 4.e.ii.c.i
+		vi. DPI is alternative to HDMI and has DMA support.
+			a. See 4.e.ii.c.i
+3. Test Current Limit - Point of this is to prove power supply can tolerate panel peak current. (Panels are required.)
+	a. Use all panels.
+	b. Compute max number of pixels required multiply be max power consumed per pixel. Verify with PSU.
+	c. If unable, ensure PSU has thermal and current overload protection.
+		i. Reduce multiplex and serial performance. (Increase gpio-slowdown, lsb-nanoseconds and pwm-bits.)
+		ii. Display the follow solid frames slowly: white (30mA), red (16mA), purple (20mA), cyan (14mA), green (8mA), blue (6mA), black (0mA).
+			a. demo example contains something similar to this.
+			b. Note which fails to show up correctly.
+			c. For worse case, white.
+			d. For worse case, all pixels in frame.
+	d. Note average current will not reflect peak current.
+		i. Power supply should track peak current for worst case.
+4. Test Panel Settings - Point of this is prove that you know what type of multiplex and LED driver you have.
+	a. Only use a single panel on a single chain.
+	b. Increase gpio-slowdown to max.
+	c. Reduce PWM bits to 1.
+		i. If panel is too slow, increase up to 8.
+	d. Some panels use different notions of multiplexer which require different settings from the library.
+		i. Examples.
+			a. Decoders
+			b. Direct
+			c. Shift register
+		ii. Not all configurations of these are supported by the library
+			a. Pixel mappers are used and if willing to write your own this will likely fix it.
+		iii. Outdoor panels generally use different settings to increase brightness.
+	e. Some LED drivers are special
+		i. FM6126, FM6126A, FM6127, etc.
+			a. These require a special init sequence to operate.
+			b. Use this at your own risk, limited documentation exists on how this done.
+				i. These have a nice feature(s) which would be nice to integrate to the library.
+		ii. Any PWM or memory mapped LED driver is not supported.
+			a. These work completely differently and probably should be a different library.
+				1. More effiecent serial protocol.
+					i. State based.
+					ii. Not fully memory mapped protocol.
+						a. Same protocol for PWM and memory mapped drivers.
+						b. Memory mapped drivers have double buffer local storage.
+				2. Uses different bit banging notion.
+			b. If doing anything that would need these.
+				1. Use HDMI to dedicated LED Matrix Sender/Receiver Card/Module
+				2. Those modules can be costly however not compared to the cost of panels needed for this to make sense.
+				3. Other libraries exist on cheap platforms which are potentially better suited.
+					i. One way is known to port this over, however it may cause more problems in the long run.
+			c. These can be too much for the Pi without special consideration.
+				i. This is off topic.
+					1. Number of ways to do it.
+						a. True overall for LED matrix
+						b. Depends on application.
+				ii. Theoretically can be supported, but would have limitations which may not make sense.
+					1. Display size is reduced, but quality is improved for video.
+						a. Bit banging (serial clock/protocol) consumes large amounts of CPU.
+							i. Glosses over a few things.
+						b. Resolution low.
+					2. Display size and quality is improved but frame rate is reduced for billboard/message board.
+						a. Memory consumption can be more than Pi has.
+							i. Impractically high resolution.
+							ii. Frame rate less than one.
+						b. Only applies for memory mapped LED drivers.
+					3. GCLK consumes CPU or serial bandwidth.
+						a. Both consume frame rate or display size.
+							i. As mentioned above.
+					4. External solutions could be used.
+						a. Adds cost.
+						b. May be complicated and miss the point of the Pi library.
+						c. Note benefits could extend beyond these special cases.		
+				iii. Configuration is difficult to manage/predict.
+					1. Hardware PWM increases refresh rate.
+						a. S-PWM creates frame rate using upper PWM bits from refresh rate.
+						b. Increased multiplexing reduces this.
+					2. GCLK and/or Serial clock sets upper limit on frame rate / quality.
+						a. PWM LED drivers multiplex like standard LED drivers.
+					3. See 2.c.i.b
+			d. Most do not support a full memory mapped interface.
+				i. Lacks some of the advantages of memory mapped.
+				ii. Cost optimized for use with optimized controller in signage market.
+5. Test Timing - Point of this is to prove settings produce proper timings.
+	a. Only use single panel on a single chain.
+6. Test Transient response - Point of this is to prove power supply can respond fast enough.
+	a. Use all panels.
+	b. Check wiring.
+	c. Check decoupling.
+	d. Configure for max refresh desired. (Decrease gpio-slowdown, lsb-nanoseconds and pwm-bits.)
+		i. Use settings found in Test 2.
+		ii. Repeat 6.b and 6.c
+7. Test display brightness - Make sure display is bright enough or not too bright
+	a. Use all panels.
+	b. Decrease brightness with brightness setting.
+		i. Note current reduction will be non-linear if using CIE1931.
+			a. Optional, study here: https://github.com/hzeller/rpi-rgb-led-matrix/blob/dfc27c15c224a92496034a39512a274744879e86/lib/framebuffer.cc#L592
+		ii. Current reduction will be linear for direct/non-CIE1931.
+	c. Increase brightness with increase lsb-nanoseconds.
+		i. See 2.b.iii
+		ii. Repeat tests 2, 5 and 6 as required.
+		iii. Configuration for quality of long chains may decrease brightness.
+		iv. Optional, study here
+			a. https://github.com/hzeller/rpi-rgb-led-matrix/blob/dfc27c15c224a92496034a39512a274744879e86/lib/framebuffer.cc#L457
+			b. https://github.com/hzeller/rpi-rgb-led-matrix/blob/dfc27c15c224a92496034a39512a274744879e86/lib/framebuffer.cc#L873
+		
+
+GPIO-slowdown Recommendations:
+	GPIO-slowdown min recommendations: (20 - 22MHz)
+		Pi/Pi Zero - 0
+		Pi 2 - 1
+		Pi 3 - 2
+		Pi 4 - 5
+
+	GPIO-slowdown recommendations: (0 - 15MHz)
+		Pi/Pi Zero - 1+
+		Pi 2 - 3+
+		Pi 3 - 4+
+		Pi 4 - 8+ (Not supported - Max of 5)
+
+	Recommendation source:
+		https://github.com/hzeller/rpi-gpio-dma-demo#result
+
+		Pi/Pi Zero - 22.7MHz
+		Pi 2 - 41.7MHz
+		Pi 3 - 65.8MHz
+		Pi 4 - 131MHz
+
+	Divide frequency by target frequency. Round up result and subtract one. This is the value recommended for GPIO-slowdown.
+
+
+Clarifications:
+	1. Refresh rate and frame rate are different but correlated.
+		a. For standard and PWM LED drivers you must multiplex near or above 100Hz.
+			i. Cameras may be faster than human eye.
+			ii. Standard LED drivers require a reduction of quality or size to improve this.
+			iii. PWM drivers are more and less effiecent
+				1. Improves quality.
+				2. Reduces size.
+				3. Not able to be changed.
+				4. Not supported.
+		b. For memory mapped using S-PWM frame rate and quality are within refresh rate.
+			i. Will be easily be at least 100Hz
+			ii. Not supported.
+		c. Video frame rate for standard can be as fast as refresh rate.
+			i. Not recommended.
+			ii. CPU performance will likely limit this.
+		d. Background thread will refresh using from memory buffer.
+			i. Not required to be updated unless desired.
+	2. High versus low multiplex
+		a. High multiplex increases pixel density
+		b. High multiplex reduces brightness
+			i. Pixel density is generally not needed.
+			ii. Resolution increases chain length.
+		c. Serial bandwidth is consumed according to pixel count, quality and refresh rate.
+	3. Double buffering vs single buffer
+		a. Pi is technically memory mapped controller indirectly.
+		b. Double buffering can avoid tearing.
+		c. Double buffering may reduce system performance.
+		d. Double buffering will increase memory consumption.
+		e. Can draw directly into background buffer.
+	4. Library starts a background thread.
+		a. It is not recommend to stall this thread.
+			i. See 2.c.ii.b
+			ii. If this is ever stalled, you will see refresh fail
+		b. Your logic will run out of main thread.
+		c. Note this thread does not throttle itself and assumes to be always running.
+			i. Busy blocks instead of yielding.
+	5. Library starts with super user rights
+		a. Required to initialize
+			i. Hardware PWM is used to keep track of time for BCM
+				1. Optional, recommended.
+				2. Helpful for systems with weaker notions of real time.
+				3. Requires special pin location for OE.
+					a. Logic will automatically disable hardware PWM if not used correctly.
+			ii. Used to mount Pi hardware register space in userspace.
+				1. Only maps things required.
+				2. Limited security impact.
+				3. Possible compatibility issue.
+		b. Logic does not understand the user account that called it
+		c. Dropping privilidges will cause it to change user to daemon user
+		d. Possible security issue, use carefully.
+			i. Recommended to always drop.
+		e. Applies entire process unless you work around this.
+			i. Possible implications for system performance.
+	6. Using hardware PWM consumes PWM hardware on Pi
+		a. May remove audio functionality on eariler models.
+		b. May create compatability issue.
+		c. Can use PCM/I2S hardware interface.
+	7. Pin mapping is very flexible.
+		a. OE pin is special if using hardware PWM.
+			i. Must be in PWM locations.
+		b. Can redefine and move pins around.
+		c. 3 chains and 5 address lines will consume nearly all pins.
+		d. Compute modules enable up to 6 chains with configuration change.
+	8. Multiplex vs Pixel Mappers
+		a. Secretely the same
+		b. Multiplex is for handling difference in multiplex logic
+			i. Logic only works for a single panel.
+		c. Pixel is for handling panel orientation and layout.
+			i. Logic takes SetPixel locations and translates them into chain locations.
+			ii. Makes 512x192 (chain configuration) into 256x384 (image configuration)
+		d. Applied at library initialization.
+			i. One pixel mapper and one multiplex mapper is applied in required sequence.
+				1. If needed.
+			ii. Reworks pointer table to array table.
+				1. array table is bit map which is clocked out by background thread.
+			iii. SetPixel looks up array location via pointer table to edit actual bit map
+	9. Arguments
+		a. rows is the total rows for a panel
+		b. columss is the total rows for a panel
+		c. chain is the number panels in a chain
+			i. All the same size
+		d. parallel is the number of chains in parallel
+			i. All the same size and length
