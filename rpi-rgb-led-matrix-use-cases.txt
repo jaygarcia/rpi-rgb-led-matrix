@@ -43,6 +43,14 @@ This library works in the larger area of signage. There are three major applicat
       Power consumption is also problematic and almost always misunderstood.
   It could create confusion or misuse to support all combinations in a single API.
     However is possible in theory. Except some approaches, like this one, require special care.
+    
+    
+  Note there are many ways to retro fit a memory map onto a LED matrix.
+  In fact this is what this library does.
+  Memory maps are generally used in several types of IO/memory transfers.
+  This can make programming simpler, however bit banging generally does the opposite.
+    Therefore multicore is recommended as it breaks this up.
+    Additional complications can still rise on unified and general purpose computer architectures from this.
   
   
   In summary:
